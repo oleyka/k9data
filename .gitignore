@@ -3,8 +3,9 @@
 *.swp
 data/offa/
 
-# manage stuff
-manage/.cache/
-manage/.eggs/
-manage/scripts.egg-info/
-manage/venv/
+# packaging/testing stuff
+*.egg
+.cache/
+.eggs/
+scripts.egg-info/
+venv/

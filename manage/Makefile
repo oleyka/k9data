@@ -4,10 +4,11 @@ default: test
 
 venv:
 	virtualenv venv
-	. venv/bin/activate; pip install -Ur requirements.txt
+	. venv/bin/activate
+	pip install -Ur requirements.txt
 
 test: venv
-	@python setup.py pytest
+	python setup.py pytest
 
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +
