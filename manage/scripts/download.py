@@ -87,9 +87,9 @@ def main():
     global breeds
     global quarters
 
-    for quarter in keys(quarters):
-        for breed_id in keys(breeds):
-            get_offa_data(quaeters[quarter], breed_id)
+    for breed_id in breeds:
+        for quarter in quarters:
+            get_offa_data(quarters[quarter], breed_id)
 
 
 if __name__ == "__main__":
