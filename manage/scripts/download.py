@@ -9,23 +9,31 @@ import string
 from global_vars import quarters, breeds, save_path
 
 
-def get_filename(cd_header):
+def get_filename(cd_header, breed_id):
+    global save_path
+    valid_chars = "-_.%s%s" % (string.ascii_letters, string.digits)
+
     if cd_header is None:
         return
     try:
-        fname = cd_header.split('; ')[1].split('=')[1]
+        fname = str(cd_header).split('; ')[1].split('=')[1]
     except IndexError:
         return
-    valid_chars = "-_.%s%s" % (string.ascii_letters, string.digits)
-    cdisp = ''.join(c for c in fname if c in valid_chars)
 
+    cdisp = ''.join(c for c in fname if c in valid_chars)
     if len(cdisp) == 0:
         return
-    return save_path + cdisp
+
+    bdisp = ''.join(c for c in str(breed_id) if c in valid_chars)
+    if breed_id is None or len(bdisp) == 0:
+        return save_path + cdisp
+
+    return save_path + bdisp + '/' + cdisp
 
 
 def get_offa_data(qf, brid):
     global breeds
+    global save_path
 
     offa_url = 'http://www.ofa.org'
     reports_url = offa_url + '/reports.html'
@@ -57,9 +65,16 @@ def get_offa_data(qf, brid):
     opener.addheaders.append(('Referer', offa_url))
     dresponse = opener.open(downloads_url + '?btnDownload=Download')
 
-    fpath = get_filename(dresponse.info().getheader('Content-disposition'))
+    if os.path.isdir(save_path) and not os.path.exists(save_path + brid):
+        try:
+            os.path.makedirs(save_path + brid)
+        except:
+            print >>sys.stderr, 'Error creating save directory for breed ' + breeds[brid]
+            return
+
+    fpath = get_filename(dresponse.info().getheader('Content-disposition'), brid)
     if fpath is None:
-        print >>sys.stderr, 'Malformed filename header: skip report ' + qf + ' for breed ' + breeds[brid]
+        print >>sys.stderr, 'Missing filename header: skip report ' + qf + ' for breed ' + breeds[brid]
         return
 
     if os.path.isfile(fpath):
