@@ -11,13 +11,6 @@ venv:
 test: venv
 	python setup.py pytest
 
-download: venv
-	cd scripts; ./download.py
-
-upzip:
-	cd scripts; ./unzip.py
-	cd $(k9data); find . -name \*.zip -exec rm -v '{}' +
-
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +
 	@find . -name __pycache__ -prune -exec rm -vfr '{}' +
@@ -26,4 +19,4 @@ clean:
 	@rm -rf .tox .eggs
 	@rm -rf distribute-* *.egg *.egg-info
 
-.PHONY: default test download unzip clean
+.PHONY: default test clean
