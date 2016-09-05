@@ -1,3 +1,10 @@
 .DS_Store
 *.pyc
+*.swp
 data/offa/
+
+# manage stuff
+manage/.cache/
+manage/.eggs/
+manage/scripts.egg-info/
+manage/venv/

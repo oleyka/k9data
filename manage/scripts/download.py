@@ -3,17 +3,39 @@
 import os
 import sys
 import urllib2
-import HTMLParser
 import string
+# import HTMLParser
 
 from global_vars import quarters, breeds, save_path
 
 
-def get_data(qf, brid):
+def get_filename(cd_header):
+    if cd_header is None:
+        return
     try:
-        response = urllib2.urlopen('http://www.ofa.org/reports.html?quarter=' +
-                                   qf + '&breed=' + brid + '&btnSelect=Select'
-                                  )
+        fname = cd_header.split('; ')[1].split('=')[1]
+    except IndexError:
+        return
+    valid_chars = "-_.%s%s" % (string.ascii_letters, string.digits)
+    cdisp = ''.join(c for c in fname if c in valid_chars)
+
+    if len(cdisp) == 0:
+        return
+    return save_path + cdisp
+
+
+def get_offa_data(qf, brid):
+    global breeds
+
+    offa_url = 'http://www.ofa.org'
+    reports_url = offa_url + '/reports.html'
+    downloads_url = offa_url + '/reports.php'
+
+    try:
+        response = urllib2.urlopen(reports_url +
+                                   '?quarter=' + qf +
+                                   '&breed=' + brid +
+                                   '&btnSelect=Select')
     except urllib2.HTTPError, e:
         print >>sys.stderr, 'HTTPError: ' + str(e)
         return
@@ -24,54 +46,50 @@ def get_data(qf, brid):
         print >>sys.stderr, 'Exception: ' + str(sys.exc_info()[0])
         return
 
-    details = response.read()
+    # details = response.read()  # TODO parse the field names in html table
     cookie = response.info().getheader('Set-Cookie')
+    if cookie is None:
+        print >>sys.stderr, 'Missing cookie header: skip report ' + qf + ' for breed ' + breeds[brid]
+        return
 
     opener = urllib2.build_opener()
     opener.addheaders.append(('Cookie', cookie))
-    opener.addheaders.append(('Referer', 'http://www.ofa.org'))
-    response2 = opener.open("http://www.ofa.org/reports.php?btnDownload=Download")
-    cdisp = response2.info().getheader('Content-disposition')
-    if cdisp == None:
-        print >>sys.stderr, 'Missing filename header: skip report ' + qf + ' for breed ' + breeds[brid]
-    else:
-        fname = get_filename(cdisp)
-        if (len(fname) > 0):
-            fpath = save_path + fname
-            if os.path.isfile(fpath):
-                print >>sys.stderr, 'File ' + fpath + ' exists'
-                print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': skip'
-                return
+    opener.addheaders.append(('Referer', offa_url))
+    dresponse = opener.open(downloads_url + '?btnDownload=Download')
 
-            content = response2.read()
-            try:
-                target = open(fpath, 'w')
-                target.write(content)
-                target.close()
-                print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': OK'
-            except IOError, e:
-                print >>sys.stderr, e
-                print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': skip'
-        else:
-            print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': skip'
-            
+    fpath = get_filename(dresponse.info().getheader('Content-disposition'))
+    if fpath is None:
+        print >>sys.stderr, 'Malformed filename header: skip report ' + qf + ' for breed ' + breeds[brid]
+        return
 
-def get_filename(cd):
+    if os.path.isfile(fpath):
+        print >>sys.stderr, 'File ' + fpath + ' exists'
+        print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': skip'
+        return
+
     try:
-        fname = cd.split('; ')[1].split('=')[1]
-    except IndexError:
-        print >>sys.stderr, 'Malformed filename header'
-        return ''
-    valid_chars = "-_.%s%s" % (string.ascii_letters, string.digits)
-    return ''.join(c for c in fname if c in valid_chars)
+        target = open(fpath, 'w')
+    except IOError, e:
+        print >>sys.stderr, e
+        print >>sys.stderr, 'Write report ' + qf + ' for breed ' + breeds[brid] + ' to file ' + fpath + ': skip'
+        return
+
+    content = dresponse.read()
+    target.write(content)
+    target.close()
+    print >>sys.stderr, str('Write report ' + qf +
+                            ' for breed ' + breeds[brid] +
+                            ' to file ' + fpath + ': OK')
+    return fpath
+
 
 def main():
-    # print get_filename('attachment; filename=///PO30///$ -jun-16.csv')
-    get_data("web30-jun-16up.zip", "PO")
+    global breeds
+    global quarters
     '''
-    for quarter_file in quarters:
+    for quarter in keys(quarters):
         for breed_id in keys(breeds):
-            get_data(quarter_file, breed_id)
+            get_offa_data(quaeters[quarter], breed_id)
     '''
 
 
