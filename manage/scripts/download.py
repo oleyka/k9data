@@ -75,7 +75,7 @@ def get_offa_data(qf, brid):
 
     if not os.path.exists(save_path + '/' + brid):
         try:
-            os.path.makedirs(save_path + '/' + brid)
+            os.makedirs(save_path + '/' + brid)
         except:
             print >>sys.stderr, 'Error creating save directory for breed ' + breeds[brid]
             return
