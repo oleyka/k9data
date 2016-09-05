@@ -1,4 +1,5 @@
 VERSION=$(/usr/bin/env python setup.py --version)
+PATH=venv/bin:$PATH
 
 default: test
 
@@ -11,7 +12,7 @@ test: venv
 	python setup.py pytest
 
 download: venv
-	python download.py
+	cd scripts; ./download.py
 
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +
