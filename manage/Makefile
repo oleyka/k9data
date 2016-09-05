@@ -10,6 +10,9 @@ venv:
 test: venv
 	python setup.py pytest
 
+download: venv
+	python download.py
+
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +
 	@find . -name __pycache__ -prune -exec rm -vfr '{}' +
