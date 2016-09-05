@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 import pytest
-from scripts.download import *
-from scripts.global_vars import offa_save_path
+from k9data.download import *
+from k9data.common.global_vars import offa_save_path
 
 
 class TestDownloads:

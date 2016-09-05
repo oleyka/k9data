@@ -6,7 +6,7 @@ import urllib2
 import zipfile
 import types
 
-from global_vars import breeds, offa_save_path
+from common.global_vars import breeds, offa_save_path
 
 
 def list_zips(breed_id):

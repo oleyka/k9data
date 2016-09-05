@@ -8,5 +8,5 @@ data/*tgz
 *.egg
 .cache/
 .eggs/
-scripts.egg-info/
+*.egg-info/
 venv/

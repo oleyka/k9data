@@ -1,2 +1,4 @@
-pandas
 flask
+pandas
+pytest
+pytest-pep8

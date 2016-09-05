@@ -4,9 +4,8 @@ import os
 import sys
 import urllib2
 import string
-# import HTMLParser
 
-from global_vars import quarters, breeds, offa_save_path
+from common.global_vars import *
 
 
 def get_filename(cd_header, breed_id):
@@ -107,7 +106,7 @@ def main():
     print "Starting download to " + offa_save_path
 
     for quarter in quarters:
-        get_offa_data(quarters[quarter], "WO")
+        get_offa_data(quarters[quarter], "PO")
     '''
     for breed_id in breeds:
         for quarter in quarters:

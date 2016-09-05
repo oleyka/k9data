@@ -2,7 +2,7 @@
 
 import os
 
-data_path = os.environ["k9data"] if "k9data" in os.environ else "../../data"
+data_path = os.environ["k9data_path"] if "k9data_path" in os.environ else "./data"
 offa_save_path = data_path + "/offa"
 
 quarters = {

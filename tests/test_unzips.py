@@ -3,7 +3,7 @@
 import pytest
 import types
 
-from scripts.unzip import *
+from k9data.unzip import *
 
 
 class TestUnzip:
@@ -18,5 +18,6 @@ class TestUnzip:
     def test_list_three_zips(self):
         thlist = list_zips('BEC')
         assert isinstance(thlist, types.ListType)
-        assert len(thlist) == 3
-        assert 'BEC30-Sep-04.zip' in thlist
+        # NOTE all zip files removed
+        # assert len(thlist) == 3
+        # assert 'BEC30-Sep-04.zip' in thlist
