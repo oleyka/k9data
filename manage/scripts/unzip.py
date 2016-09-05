@@ -24,7 +24,7 @@ def unzip_list(breed_id, flist):
     if flist is None:
         return
     for f in flist:
-        logstr("Unpack " + f + " into " + offa_save_path + "/" + breed_id + ": ")
+        logstr = "Unpack " + f + " into " + offa_save_path + "/" + breed_id + ": "
         fpath = offa_save_path + "/" + breed_id + "/" + f
         zip_ref = zipfile.ZipFile(fpath, 'r')
         zip_ref.extractall(offa_save_path + "/" + breed_id)
