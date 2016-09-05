@@ -24,11 +24,10 @@ def get_filename(cd_header, breed_id):
     if len(cdisp) == 0:
         return
 
-    bdisp = ''.join(c for c in str(breed_id) if c in valid_chars)
-    if breed_id is None or len(bdisp) == 0:
-        return save_path + cdisp
+    if breed_id is None:
+        return save_path + '/' + cdisp
 
-    return save_path + bdisp + '/' + cdisp
+    return save_path + '/' + breed_id + '/' + cdisp
 
 
 def get_offa_data(qf, brid):
@@ -65,17 +64,21 @@ def get_offa_data(qf, brid):
     opener.addheaders.append(('Referer', offa_url))
     dresponse = opener.open(downloads_url + '?btnDownload=Download')
 
-    if os.path.isdir(save_path) and not os.path.exists(save_path + brid):
-        try:
-            os.path.makedirs(save_path + brid)
-        except:
-            print >>sys.stderr, 'Error creating save directory for breed ' + breeds[brid]
-            return
-
     fpath = get_filename(dresponse.info().getheader('Content-disposition'), brid)
     if fpath is None:
         print >>sys.stderr, 'Missing filename header: skip report ' + qf + ' for breed ' + breeds[brid]
         return
+
+    if not os.path.exists(save_path) or not os.path.isdir(save_path):
+        print >>sys.stderr, 'Directory ' + save_path + ' does not exist'
+        return
+
+    if not os.path.exists(save_path + '/' + brid):
+        try:
+            os.path.makedirs(save_path + '/' + brid)
+        except:
+            print >>sys.stderr, 'Error creating save directory for breed ' + breeds[brid]
+            return
 
     if os.path.isfile(fpath):
         print >>sys.stderr, 'File ' + fpath + ' exists'

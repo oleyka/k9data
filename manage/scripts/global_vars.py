@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-save_path = "../../data/offa/"
+save_path = "../../data/offa"
 
 quarters = {
     "2016 Q2": "web30-jun-16up.zip",
