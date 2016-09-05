@@ -6,11 +6,11 @@ import urllib2
 import string
 # import HTMLParser
 
-from global_vars import quarters, breeds, save_path
+from global_vars import quarters, breeds, offa_save_path
 
 
 def get_filename(cd_header, breed_id):
-    global save_path
+    global offa_save_path
     valid_chars = "-_.%s%s" % (string.ascii_letters, string.digits)
 
     if cd_header is None:
@@ -25,14 +25,14 @@ def get_filename(cd_header, breed_id):
         return
 
     if breed_id is None:
-        return save_path + '/' + cdisp
+        return offa_save_path + '/' + cdisp
 
-    return save_path + '/' + breed_id + '/' + cdisp
+    return offa_save_path + '/' + breed_id + '/' + cdisp
 
 
 def get_offa_data(qf, brid):
     global breeds
-    global save_path
+    global offa_save_path
 
     offa_url = 'http://www.ofa.org'
     reports_url = offa_url + '/reports.html'
@@ -69,13 +69,13 @@ def get_offa_data(qf, brid):
         print >>sys.stderr, 'Missing filename header: skip report ' + qf + ' for breed ' + breeds[brid]
         return
 
-    if not os.path.exists(save_path) or not os.path.isdir(save_path):
-        print >>sys.stderr, 'Directory ' + save_path + ' does not exist'
+    if not os.path.exists(offa_save_path) or not os.path.isdir(offa_save_path):
+        print >>sys.stderr, 'Directory ' + offa_save_path + ' does not exist'
         return
 
-    if not os.path.exists(save_path + '/' + brid):
+    if not os.path.exists(offa_save_path + '/' + brid):
         try:
-            os.makedirs(save_path + '/' + brid)
+            os.makedirs(offa_save_path + '/' + brid)
         except:
             print >>sys.stderr, 'Error creating save directory for breed ' + breeds[brid]
             return
@@ -102,12 +102,17 @@ def get_offa_data(qf, brid):
 
 
 def main():
-    global breeds
-    global quarters
+    global breeds, quarters, offa_save_path
 
+    print "Starting download to " + offa_save_path
+
+    for quarter in quarters:
+        get_offa_data(quarters[quarter], "WO")
+    '''
     for breed_id in breeds:
         for quarter in quarters:
             get_offa_data(quarters[quarter], breed_id)
+    '''
 
 
 if __name__ == "__main__":

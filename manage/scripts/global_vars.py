@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-save_path = "../../data/offa"
+import os
+
+data_path = os.environ["k9data"] if "k9data" in os.environ else "../../data"
+offa_save_path = data_path + "/offa"
 
 quarters = {
     "2016 Q2": "web30-jun-16up.zip",

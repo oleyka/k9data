@@ -1,9 +1,10 @@
 VERSION=$(/usr/bin/env python setup.py --version)
-PATH=venv/bin:$PATH
+k9data=$(PWD)/../data
 
 default: test
 
 venv:
+	PATH=venv/bin:$(PATH)
 	virtualenv venv
 	. venv/bin/activate
 	pip install -Ur requirements.txt
