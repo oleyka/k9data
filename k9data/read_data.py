@@ -37,7 +37,8 @@ def read_all(breed_id):
                                     "Test Date",
                                     "Results",
                                     "Sire Registration",
-                                    "Dam Registration"
+                                    "Dam Registration",
+                                    "CHIC Number"
                                 ]) for f in flist]
 
     records = pd.concat(records_list)
@@ -49,6 +50,18 @@ def main():
     breed_id = os.environ["k9data_breed"] if "k9data_breed" in os.environ else "WO"
 
     records = read_all(breed_id)
+    print "Test counts:"
+    print records.groupby(["Registry Code"])["Registry Code"].count().sort_values()
+
+    ''' # NOTE read them all
+    codes = set()
+    for breed_id in breeds:
+        records = read_all(breed_id)
+        if records is not None:
+            print records["Registry Code"].unique()
+            codes.update(records["Registry Code"].unique().tolist())
+    print "Collected codes", sorted(codes)
+    '''
     return
 
 if __name__ == "__main__":

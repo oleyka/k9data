@@ -4,7 +4,6 @@ import os
 import sys
 import urllib2
 import zipfile
-import types
 
 from common.global_vars import breeds, offa_save_path
 
