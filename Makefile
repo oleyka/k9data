@@ -9,7 +9,7 @@ venv: venv/bin/activate
 venv/bin/activate: requirements.txt
 	test -d venv || virtualenv venv
 	venv/bin/pip install -Ur requirements.txt
-	touch venv/bin/activate
+	source venv/bin/activate
 
 test: venv
 	./venv/bin/python setup.py pytest
@@ -19,7 +19,10 @@ download: venv
 
 unzip: venv
 	cd k9data; k9data_path=$(DATAPATH) ../venv/bin/python unzip.py
-	test -d $(DATAPATH); cd $(DATAPATH); find . -name \*.zip -exec rm -v '{}' +
+	cd $(DATAPATH); find . -name \*.zip -exec rm -v '{}' +
+
+read_data: venv
+	@cd k9data; k9data_path=$(DATAPATH) k9data_breed="PO" ../venv/bin/python read_data.py
 
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +
