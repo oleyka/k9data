@@ -5,6 +5,7 @@ import sys
 import pandas as pd
 
 from common.global_vars import *
+from results import *
 
 
 def read_all(breed_id):
@@ -51,26 +52,10 @@ def count_tests(records):
     print records.groupby(["Registry Code"])["Registry Code"].count().sort_values()
 
 
-def count_hd_results(records):
-    print "HD records stats:"
-    hd_results = records.loc[lambda df: df["Registry Code"] == "HD", :]
-    ghd_results = records.loc[lambda df: df["Registry Code"] == "GHD", :]
-    ohd_results = records.loc[lambda df: df["Registry Code"] == "OHD", :]
-    phd_results = records.loc[lambda df: df["Registry Code"] == "PHD", :]
-    hd_all_results = pd.concat([hd_results, ghd_results, ohd_results, phd_results])
-    print hd_all_results.groupby("Results")["Results"].count().sort_values()
-    print "Total HD records:", hd_all_results["Results"].count()
-
-    '''  NOTE looking up broken records
-    hd_results = records.loc[lambda df: df["Registry Code"] == "HD", :].groupby(["Results"])["Results"]
-    print hd_results.loc[lambda df: df["Results"] == "12/11/2001", :] #.count()
-    '''
-
-
 def main():
     breed_id = os.environ["k9data_breed"] if "k9data_breed" in os.environ else "WO"
     records = read_all(breed_id)
-    count_hd_results(records)
+    print count_hd_by_result(records)
 
     '''  NOTE read them all
     codes = set()
