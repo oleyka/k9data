@@ -14,7 +14,8 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        read_data=k9data.read_data:cli
+        results=k9data.results:cli
+        sanitize=k9data.sanitize:cli
     ''',
     setup_requires=['pytest-runner'],
     tests_require=[
