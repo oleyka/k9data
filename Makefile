@@ -1,6 +1,8 @@
-VERSION=$(/usr/bin/env python setup.py --version)
-DATAPATH:=$(PWD)/data
 PATH:=venv/bin:$(PATH)
+VERSION=$(/usr/bin/env python setup.py --version)
+
+K9BREED?="TEST"
+K9DATAPATH?=$(PWD)/data
 
 default: test
 
@@ -15,14 +17,14 @@ test: venv
 	./venv/bin/python setup.py pytest
 
 download: venv
-	cd k9data; k9data_path=$(DATAPATH) ../venv/bin/python download.py
+	cd k9data; k9data_path=$(K9DATAPATH) ../venv/bin/python download.py
 
 unzip: venv
-	cd k9data; k9data_path=$(DATAPATH) ../venv/bin/python unzip.py
-	cd $(DATAPATH); find . -name \*.zip -exec rm -v '{}' +
+	cd k9data; k9data_path=$(K9DATAPATH) ../venv/bin/python unzip.py
+	cd $(K9DATAPATH); find . -name \*.zip -exec rm -v '{}' +
 
-read_data: venv
-	@cd k9data; k9data_path=$(DATAPATH) k9data_breed="PO" ../venv/bin/python read_data.py
+sanitize: venv
+	@cd k9data; k9data_path=$(K9DATAPATH) k9data_breed=$(K9BREED) ../venv/bin/python sanitize.py
 
 clean:
 	@find . -name \*.pyc -exec rm -v '{}' +

@@ -15,7 +15,25 @@ def count_hd_by_result(records):
     res_str += str(hd_all_results["Results"].count())
     return res_str
 
-    '''  NOTE looking up broken records
-    hd_results = records.loc[lambda df: df["Registry Code"] == "HD", :].groupby(["Results"])["Results"]
-    print hd_results.loc[lambda df: df["Results"] == "12/11/2001", :] #.count()
-    '''
+
+def count_tests(records):
+    print "Test counts:"
+    print records.groupby(["Registry Code"])["Registry Code"].count().sort_values()
+
+
+def main():
+    breed_id = os.environ["k9data_breed"] if "k9data_breed" in os.environ else False
+    if breed_id:
+        records = read_breed(breed_id)
+    else:
+        for breed_id in breeds:
+            breed_records = [read_breed(breed_id) for breed_id in breeds]
+        records = pd.concat(breed_records)
+
+    print len(records)
+    print count_hd_by_result(records)
+    return
+
+
+if __name__ == "__main__":
+    main()

@@ -5,6 +5,24 @@ import os
 data_path = os.environ["k9data_path"] if "k9data_path" in os.environ else "./data"
 offa_save_path = data_path + "/offa"
 
+offa_field_names = [
+    "OFA Number",
+    "Registration Number",
+    "Registry Code",
+    "Closed/Open",
+    "Breed Code",
+    "Registered Name",
+    "Sex",
+    "Color",
+    "Birthdate",
+    "Age at Test (Months)",
+    "Test Date",
+    "Results",
+    "Sire Registration",
+    "Dam Registration",
+    "CHIC Number"
+]
+
 offa_test_codes = {
     "ACA": "Advanced Cardiac",
     "ADB": "",
