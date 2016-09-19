@@ -20,9 +20,7 @@ def main():
     if breed_id:
         records = read_breed(breed_id)
     else:
-        for breed_id in breeds:
-            breed_records = [read_breed(breed_id) for breed_id in breeds]
-        records = pd.concat(breed_records)
+        records = pd.concat([read_breed(breed_id) for breed_id in breeds])
 
     print len(records)
     list_corrupt(records)
